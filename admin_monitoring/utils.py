@@ -35,7 +35,7 @@ def register(admin_site, model, model_admin=None, new_object_kwargs=None, seen_o
             seen_object_kwargs = {
                 new_object_kwargs.keys()[0]: not new_object_kwargs.values()[0]
             }
-        elif len(new_object.kwargs.keys() > 1):
+        elif len(new_object_kwargs.keys() > 1):
             raise Exception("seen_object_kwargs must be specified in complex cases")
 
     AdminMonitoringMixin = admin_monitoring_mixin_factory(new_object_kwargs, seen_object_kwargs)
