@@ -1,38 +1,23 @@
 =====
-Django Russian Fields
+Django Admin Monitoring
 =====
 
-Приложение содержит поля, специфичные для разработки в российских условиях.
+todo: add description
 
-Список полей::
-
-* INNField
-* KPPField
-* OGRNField
-* PhoneNumberField
-
-Инструкция
+Usage
 -----------
 
-1. Установите пакет с помощью pip::
+1. Install this package using pip::
 
-    pip install django-russian_fields
+    pip install django_admin_monitoring
 
-2. Добавьте "russian_fields" в INSTALLED_APPS::
+2. Add "admin_monitoring" in your INSTALLED_APPS setting::
 
     INSTALLED_APPS = (
         ...
-        'russian_fields',
+        'admin_monitoring',
     )
 
-3. Импортируйте нужное поле в ваш models.py::
+3. todo::
 
-    from russian_fields.models.fields import INNField
-
-4. Используйте импортированное поле в вашей модели::
-
-    class MyModel(models.Model):
-        ...
-	inn = INNField(verbose_name=u"ИНН")
-
-5. Радуйтесь!
+    write the other readme stuff here
