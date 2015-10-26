@@ -6,9 +6,14 @@ from django.core.urlresolvers import reverse_lazy
 from django.template import Template, Context
 
 
-def admin_monitoring_mixin_factory(**filter_kwargs):
+def admin_monitoring_mixin_factory(new_object_kwargs, seen_object_kwargs):
 
     class AdminMonitoringMixin(admin.ModelAdmin):
+        def change_view(self, request, object_id, form_url='', extra_context=None):
+            "now the object is seen. we're applying our seen kwargs"
+            self.model.objects.filter(pk=object_id).update(**seen_object_kwargs)
+            return super(AdminMonitoringMixin, self).change_view(request, object_id, form_url=form_url, extra_context=extra_context)
+
         def get_css_name(self):
             return '%s_%s_info_css' % (self.model._meta.app_label, self.model._meta.model_name)
 
@@ -20,7 +25,7 @@ def admin_monitoring_mixin_factory(**filter_kwargs):
             return additional_urls + urls
 
         def get_css_view(self, request):
-            new_items = self.model.objects.filter(**filter_kwargs)
+            new_items = self.model.objects.filter(**new_object_kwargs)
             template = Template("""
                 {% load admin_monitoring_tags %}
                 {% if items %}{% for item in items %}a[href="{% get_admin_change_url item %}"]{% if not forloop.last %},{% endif %} {% endfor %}{

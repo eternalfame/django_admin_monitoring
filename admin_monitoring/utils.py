@@ -22,22 +22,30 @@ class VNP(object):
             return self.vnp_old
 
 
-def register(admin_site, model, model_admin=None, filter_kwargs=None, **options):
+def register(admin_site, model, model_admin=None, new_object_kwargs=None, seen_object_kwargs=None, **options):
     """
         пример использования: register(admin.site, Model, ModelAdmin, {"viewed": False})
         таким образом возле названия модели будет подписано число объектов с аттрибутом viewed=False
     """
-    if not filter_kwargs:
-        filter_kwargs = {}
+    if not new_object_kwargs:
+        new_object_kwargs = {}
 
-    AdminMonitoringMixin = admin_monitoring_mixin_factory(**filter_kwargs)
+    if not seen_object_kwargs:
+        if len(new_object_kwargs.keys()) == 1:
+            seen_object_kwargs = {
+                new_object_kwargs.keys()[0]: not new_object_kwargs.values()[0]
+            }
+        elif len(new_object.kwargs.keys() > 1):
+            raise Exception("seen_object_kwargs must be specified in complex cases")
+
+    AdminMonitoringMixin = admin_monitoring_mixin_factory(new_object_kwargs, seen_object_kwargs)
 
     class ModelAdmin(AdminMonitoringMixin, model_admin):
         pass
 
     if not hasattr(model._meta, "_verbose_name_plural"):
         model._meta._verbose_name_plural = model._meta.verbose_name_plural
-    model._meta.verbose_name_plural = VNP(model, model._meta._verbose_name_plural, **filter_kwargs)
+    model._meta.verbose_name_plural = VNP(model, model._meta._verbose_name_plural, **new_object_kwargs)
 
     # class ProxyModel(model):
     #     class Meta:
