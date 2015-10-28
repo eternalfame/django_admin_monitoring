@@ -14,6 +14,10 @@ class VNP(object):
         # fixes UnicodeDecodeError
         return "%s" % self.__repr__()
 
+    def replace(self, *args, **kwargs):
+        """ govnocode fix for 'VNP' object has no attribute 'replace' """
+        return self.__unicode__().replace(*args, **kwargs)
+
     def __repr__(self):
         count = self.model.objects.filter(**self.kwargs).count()
         if count:
