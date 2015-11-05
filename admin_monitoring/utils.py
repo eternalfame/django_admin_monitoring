@@ -1,5 +1,8 @@
 # coding=utf-8
 from __future__ import unicode_literals
+
+from django.contrib import admin
+
 from admin_monitoring.admin import admin_monitoring_mixin_factory
 
 
@@ -26,7 +29,7 @@ class VNP(object):
             return self.vnp_old
 
 
-def register(admin_site, model, model_admin=None, new_object_kwargs=None, seen_object_kwargs=None, **options):
+def register(admin_site, model, model_admin=admin.ModelAdmin, new_object_kwargs=None, seen_object_kwargs=None, **options):
     """
         пример использования: register(admin.site, Model, ModelAdmin, {"viewed": False})
         таким образом возле названия модели будет подписано число объектов с аттрибутом viewed=False
