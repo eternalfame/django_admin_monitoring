@@ -13,7 +13,7 @@ def admin_monitoring_mixin_factory(new_object_kwargs, seen_object_kwargs):
             # now the object is seen. we're applying our seen kwargs
             modified_kwargs = {}
             for k, v in seen_object_kwargs.items():
-                if hasattr(obj, "__call__"):
+                if hasattr(v, "__call__"):
                     v = v()
                 modified_kwargs[k] = v
             self.model.objects.filter(pk=object_id).update(**modified_kwargs)
