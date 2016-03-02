@@ -29,11 +29,12 @@ class VNP(object):
             return self.vnp_old
 
 
-def register(admin_site, model, model_admin=admin.ModelAdmin, new_object_kwargs=None, seen_object_kwargs=None, **options):
-    """
-        пример использования: register(admin.site, Model, ModelAdmin, {"viewed": False})
-        таким образом возле названия модели будет подписано число объектов с аттрибутом viewed=False
-    """
+def register(admin_site, model, model_admin=admin.ModelAdmin,
+             new_object_kwargs=None, seen_object_kwargs=None, **options):
+    """ пример использования:
+        register(admin.site, Model, ModelAdmin, {"viewed": False})
+        таким образом возле названия модели
+        будет подписано число объектов с аттрибутом viewed=False """
     if not new_object_kwargs:
         new_object_kwargs = {}
 
@@ -43,21 +44,17 @@ def register(admin_site, model, model_admin=admin.ModelAdmin, new_object_kwargs=
                 new_object_kwargs.keys()[0]: not new_object_kwargs.values()[0]
             }
         elif len(new_object_kwargs.keys()) > 1:
-            raise Exception("seen_object_kwargs must be specified in complex cases")
-
-    AdminMonitoringMixin = admin_monitoring_mixin_factory(new_object_kwargs, seen_object_kwargs)
-
+            raise Exception("seen_object_kwargs must be specified"
+                            " in complex cases")
+    AdminMonitoringMixin = admin_monitoring_mixin_factory(new_object_kwargs,
+                                                          seen_object_kwargs)
     class ModelAdmin(AdminMonitoringMixin, model_admin):
         pass
 
     if not hasattr(model._meta, "_verbose_name_plural"):
         model._meta._verbose_name_plural = model._meta.verbose_name_plural
-    model._meta.verbose_name_plural = VNP(model, model._meta._verbose_name_plural, **new_object_kwargs)
-
-    # class ProxyModel(model):
-    #     class Meta:
-    #         proxy = True
-    #         verbose_name = model._meta.verbose_name
-    #         verbose_name_plural = "%s" % VNP(model, model._meta.verbose_name_plural, **filter_kwargs)
+    model._meta.verbose_name_plural = VNP(model,
+                                          model._meta._verbose_name_plural,
+                                          **new_object_kwargs)
 
     admin_site.register(model, ModelAdmin, **options)
